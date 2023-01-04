@@ -1,18 +1,16 @@
 /**
  * Affichage du produit selectionné sur la page d'accueil ==> page produit
- *1-) je récupère l'id de la page pour créer une nouvelle URL pour la requete API correspondant au produit visé
 */
 
+
+//récupération de l'id de la page pour créer une nouvelle URL pour la requete API correspondant au produit visé
 let str = window.location.href;
 let url = new URL(str);
 let id = url.searchParams.get("id");
 let base = "http://localhost:3000/api/products/";
 let newUrl = base + id;
  
-/**
- * 2-) je fais ma requête à l'API pour récupérer les détails du produit
-*/
- 
+//requête à l'API pour récupérer les détails du produit
 function getProduct(){
   fetch(newUrl)
       .then(function(res) {
@@ -29,16 +27,12 @@ function getProduct(){
         })
 }
  
-/**
- * 3-) j'appelle la fonction getProduct jj
- *
-*/
- 
+
+//appel de la fonction getProduct 
 getProduct()
  
-/** 
- * 4-) j'écris la fonction qui me permet d'insérer les détails du produit sur ma page.
-*/
+
+//insére les détails du produit sur ma page
 function insertImage(imageUrl, altText){
   let img = document.querySelector(".item__img");
   img.innerHTML = `<img src=${imageUrl} alt=${altText}/>`
@@ -50,7 +44,7 @@ function insertOtherProduct(fieldId, textContent){
 }
 
 function insertProductColors(colors){
-  let colorChoice = document.getElementById(colors);
+  let colorChoice = document.querySelector("#colors");
   for(let i=0; i<colors.length; i++){
     colorChoice.innerHTML +=    `<option value="${colors[i]}">${colors[i]}</option>`;
   }
@@ -62,3 +56,46 @@ function insertElements(product){
   insertOtherProduct("description",product.description);
   insertProductColors(product.colors);
 }
+
+//action bouton ajouter au panier
+const button = document.querySelector("#addToCart");
+console.log(button);
+
+
+function quantityValue() {
+  return Number(document.getElementById("quantity").value);
+}
+
+function colorValue() {
+  return document.getElementById("colors").value;
+}
+
+function messageAlert(message){
+  alert(message)
+}
+
+
+
+button.addEventListener("click", function() {
+  let quantity = quantityValue();
+  let color = colorValue();
+  let product = {
+    id, quantity, color
+  }
+  if (quantity == 0 && color ==""){
+    let message = "veuillez saisir une quantité et une couleur"
+    messageAlert(message)
+  } else if (quantity == 0) {
+    let message = "veuillez saisir une quantité"
+    messageAlert(message)
+  } else if (color =="") {
+    let message = "veuillez saisir une couleur"
+    messageAlert(message)
+  } else if (quantity < 0 || quantity >100) {
+    let message = "veuillez saisir une quantité entre 1 et 100"
+    messageAlert(message)
+  } else {
+    import ("./cart.js").then(function(module) {
+    module.addCart(product);
+  })}
+})
