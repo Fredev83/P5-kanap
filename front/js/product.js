@@ -28,7 +28,7 @@ function getProduct(){
  
 
 //appel de la fonction getProduct 
-getProduct()
+getProduct();
  
 
 //insére les détails du produit sur ma page
@@ -56,11 +56,7 @@ function insertElements(product){
   insertProductColors(product.colors);
 }
 
-//action bouton ajouter au panier
-const button = document.querySelector("#addToCart");
-console.log(button);
-
-
+//retourne la quantité et les couleurs 
 function quantityValue() {
   return Number(document.getElementById("quantity").value);
 }
@@ -73,17 +69,14 @@ function messageAlert(message){
   alert(message)
 }
 
-//enrgistre le panier dans le localstorage
-function saveCart(color, quantity) {
-  let product = {
-    id, quantity, color
-  }
-  localStorage.setItem("cart", JSON.stringify(product));
-}
+//enrgistre le panier dans le localstorage au clic sur le bouton "ajouter au panier"
+let button = document.querySelector("#addToCart");
+let alertAddButton = document.querySelector('.item__content__addButton')
 
 button.addEventListener("click", function() {
   let quantity = quantityValue();
   let color = colorValue();
+  let product = {id, quantity, color}
 
   if (quantity == 0 && color == ""){
     let message = "veuillez saisir une quantité et une couleur"
@@ -98,8 +91,8 @@ button.addEventListener("click", function() {
     let message = "veuillez saisir une quantité entre 1 et 100"
     messageAlert(message)
   } else {
-   saveCart(color, quantity)
-   window.location.href = "cart.html"
+   import("./cart.js").then(function(module){
+    module.addToCart(product);
+   })
   }
 })
-
