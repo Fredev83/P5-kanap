@@ -91,8 +91,68 @@ button.addEventListener("click", function() {
     let message = "veuillez saisir une quantité entre 1 et 100"
     messageAlert(message)
   } else {
-   import("./cart.js").then(function(module){
-    module.addToCart(product);
-   })
+   addToCart(id, quantity, color)
+   
   }
 })
+
+//ajouter les produits au panier
+function addToCart(id, quantity, color){
+  console.log(addToCart)
+  let cart = getCart();
+  let product = {id, quantity, color};
+  if (isProductInCart(cart, product)){
+      changeProductQuantity(product, quantity);
+  } else {
+      cart.push(product);
+      let message = "Produit ajouté au panier";
+      messageAlert(message);
+      saveCart(cart);
+  }
+}
+
+//permet de changer la quantité depuis la page produit
+function changeProductQuantity(product, quantity) {
+  console.log(changeProductQuantity)
+  let cart = getCart();
+  let foundProduct = cart.find(p => p.id == product.id && p.color == product.color);
+  if (foundProduct != undefined) {
+      foundProduct.quantity += quantity;
+      if (foundProduct.quantity <= 0 || foundProduct.quantity >= 101){
+          removeProductFromCart(foundProduct);
+          let messageAlert = "La quantité totale de produits doit être comprise entre 1 et 100";
+          createAlertMessage(messageAlert);
+      }else {
+          let message = "Produit ajouté au panier";
+      messageAlert(message);
+      saveCart(cart);
+      }   
+  } 
+}
+
+//Récupérer les produits du panier
+function getCart() {
+  console.log(getCart)
+  let cart = localStorage.getItem("cart");
+  if (cart == null) {
+      return [];
+  } else {
+      return JSON.parse(cart);
+  }
+}
+
+//vérifier si le même produit existe déjà dans le panier
+function isProductInCart(cart, product){
+  console.log(isProductInCart)
+  return cart.some((p) => p.id === product.id && p.color === product.color);
+}
+
+//enregistrer le panier sur localStorage
+function saveCart(cart) {
+    console.log(saveCart)
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+
+ 
+
