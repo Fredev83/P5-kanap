@@ -10,37 +10,6 @@ addEventListener('DOMContentLoaded', (event) => {
         addEventsListeners();
     }
 })
- /*   
-//ajouter les produits au panier
-function addToCart(id, quantity, color){
-    console.log(addToCart)
-    let cart = getCart();
-    let product = {id, quantity, color};
-    if (isProductInCart(cart, product)){
-        changeProductQuantity(product, quantity);
-    } else {
-        cart.push(product);
-        let message = "Produit ajouté au panier";
-        messageAlert(message);
-        saveCart(cart);
-    }
-}*/
-
-//vérifier si le même produit existe déjà dans le panier
-function isProductInCart(cart, product){
-    console.log(isProductInCart)
-    return cart.some((p) => p.id === product.id && p.color === product.color);
-}
-
-
-    
-//supprimer le produit du panier
-function removeProductFromCart(product) {
-    console.log(removeProductFromCart)
-    let cart = getCart();
-    cart = cart.filter(p=> p != product);
-    saveCart(cart);
-}
 
 //enregistrer le panier sur localStorage
 function saveCart(cart) {
@@ -115,6 +84,7 @@ function addProductElementsToCartSection(products){
             console.log(err);
         }))
     }
+
     // Récupèrer les résultats des promesses
     return Promise.all(cartProductPromises)
     .then((values) => {
@@ -155,13 +125,12 @@ function getNumberOfProducts() {
     console.log(getNumberOfProducts)
     let cart = getCart();
     let number = 0;
-    for (let product in cart) {
+    for (let product of cart) {
         number += product.quantity;
     }
     let totalProducts = document.getElementById("totalQuantity");
     totalProducts.innerText = number;
 }
-
 
 //calculer le prix total du panier et l'afficher
 function getTotalPrice() {
@@ -186,7 +155,7 @@ function getTotalPrice() {
 //Champs de sélection pour modifier quantité du produit
 function buttonChangeItemQuantityAddEventListeners(){
     console.log(buttonChangeItemQuantityAddEventListeners)
-    let allButtonQuantity = Array.from(document.getElementsByClassName("itemQuantity")); //Pour éviter que le "HTML collection" change pendant que l'on est entrain de l'utiliser
+    let allButtonQuantity = Array.from(document.getElementsByClassName("itemQuantity")); 
     for (let btn of allButtonQuantity) {
         let productToChange = btn.closest(".cart__item");
         let productToChangeId = productToChange.dataset.id;
@@ -274,7 +243,7 @@ function validateInput(inputText, inputType = "") {
     return regex.test(inputText);
 }
 
-// Validation pour les champs du formulaire et renvoi le message d'erreur si nécessaire
+// Validation pour les champs du formulaire et renvoi un message d'erreur si nécessaire
 function getInputValidationMessage(inputText, inputType) {
     console.log(getInputValidationMessage)
     let isValid = validateInput(inputText, inputType);
@@ -285,7 +254,7 @@ function getInputValidationMessage(inputText, inputType) {
     }
 }
 
-// Récupèrer mon formulaire dans une variable
+// Récupèrer le formulaire dans une variable
 let form = document.querySelector(".cart__order__form");
 
 // Regrouper les listeners du formulaire dans une fonction
@@ -321,7 +290,7 @@ function addEventsListeners(){
         errorMessage.innerText = getInputValidationMessage(this.value, "email");
     })
 
-    // Ecouter la soumission du formulaire et enregistrer les données du formulaire dans le local storage
+    // Ecouter la soumission du formulaire et enregistrer les données du formulaire dans le localstorage
     form.order.addEventListener('click', function(e) {
         e.preventDefault();
     if (validateInput(form.firstName.value) && validateInput(form.lastName.value) && validateInput(form.address.value, "address") && validateInput(form.city.value) && validateInput(form.email.value, "email")) {
@@ -357,13 +326,13 @@ function getCartProductsIds(){
     return products;
 }
 
-// Récupèrer les données du formulaire sur le local storage
+// Récupèrer les données du formulaire sur le localstorage
 function getFormData() {
     let form = localStorage.getItem("contact");
         return JSON.parse(form);
 } 
 
-// Envoyer ma requête à l'API et recupèrer le numéro de commande pour rediriger vers la page confirmation
+// Envoyer la requête à l'API et recupèrer le numéro de commande pour rediriger vers la page confirmation
 function submitOrder(){
     let contact = getFormData();
     let products = getCartProductsIds();

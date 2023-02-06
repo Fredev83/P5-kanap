@@ -31,7 +31,7 @@ function getProduct(){
 getProduct();
  
 
-//insére les détails du produit sur ma page
+//insérer les détails du produit sur la page
 function insertImage(imageUrl, altText){
   let img = document.querySelector(".item__img");
   img.innerHTML = `<img src=${imageUrl} alt=${altText}/>`
@@ -56,7 +56,7 @@ function insertElements(product){
   insertProductColors(product.colors);
 }
 
-//retourne la quantité et les couleurs 
+//retourner la quantité et les couleurs 
 function quantityValue() {
   return Number(document.getElementById("quantity").value);
 }
@@ -69,7 +69,7 @@ function messageAlert(message){
   alert(message)
 }
 
-//enrgistre le panier dans le localstorage au clic sur le bouton "ajouter au panier"
+//enregistrer le panier dans le localstorage au clic sur le bouton "ajouter au panier"
 let button = document.querySelector("#addToCart");
 let alertAddButton = document.querySelector('.item__content__addButton')
 
@@ -105,7 +105,7 @@ function addToCart(id, quantity, color){
       changeProductQuantity(product, quantity);
   } else {
       cart.push(product);
-      let message = "Produit ajouté au panier";
+      let message = "Produit(s) ajouté(s) au panier";
       messageAlert(message);
       saveCart(cart);
   }
